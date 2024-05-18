@@ -265,6 +265,7 @@ void joybus_itf_init()
 }
 
 #define GC_ORIGIN_ADJUST 128
+uint8_t origin_cycle_delay = 0;
 void _joybus_rmt_process(void)
 {
     // Check which part of the cmd_phase we are in.
@@ -303,6 +304,7 @@ void _joybus_rmt_process(void)
                 if ((gc_probe_response.id_upper == 0x09) || (gc_probe_response.id_upper == 0xE9))
                 {
                     _active_gc_type = gc_probe_response.id_upper;
+                    origin_cycle_delay = 8;
                     _port_phase = 1;
                     memcpy(JB_TX_MEM, gcmd_origin_rmt, sizeof(rmt_item32_t) * GCMD_ORIGIN_LEN);
                 }
@@ -563,9 +565,16 @@ void _joybus_timeout_counter(bool reset)
     }
 }
 
+
 void joybus_itf_poll(joybus_input_s **out)
 {
     *out = _port_joybus;
+
+    if(origin_cycle_delay>0) 
+    {
+        origin_cycle_delay--;
+        return;
+    }
     
     _rmt_begin();
     ets_delay_us(500);
