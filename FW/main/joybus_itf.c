@@ -265,6 +265,7 @@ void joybus_itf_init()
 }
 
 #define GC_ORIGIN_ADJUST 128
+#define ORIGIN_DELAY_CYCLES 32
 uint8_t origin_cycle_delay = 0;
 void _joybus_rmt_process(void)
 {
@@ -304,7 +305,7 @@ void _joybus_rmt_process(void)
                 if ((gc_probe_response.id_upper == 0x09) || (gc_probe_response.id_upper == 0xE9))
                 {
                     _active_gc_type = gc_probe_response.id_upper;
-                    origin_cycle_delay = 8;
+                    origin_cycle_delay = ORIGIN_DELAY_CYCLES;
                     _port_phase = 1;
                     memcpy(JB_TX_MEM, gcmd_origin_rmt, sizeof(rmt_item32_t) * GCMD_ORIGIN_LEN);
                 }
