@@ -265,7 +265,7 @@ void joybus_itf_init()
 }
 
 #define GC_ORIGIN_ADJUST 128
-#define ORIGIN_DELAY_CYCLES 32
+#define ORIGIN_DELAY_CYCLES 8
 uint8_t origin_cycle_delay = 0;
 void _joybus_rmt_process(void)
 {
